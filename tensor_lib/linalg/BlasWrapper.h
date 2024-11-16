@@ -6,7 +6,6 @@
 // ----------------------------------------------------------------------------
 
 #pragma once
-
 #include "Logging.h"
 #include "linalg/LinalgHeadersCPU.h"
 #include "linalg/LinalgHeadersCUDA.h"

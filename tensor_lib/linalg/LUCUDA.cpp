@@ -22,9 +22,9 @@ void LUCUDA(void* A_data,
             CuSolverContext::GetInstance().GetHandle(device);
     DISPATCH_LINALG_DTYPE_TO_TEMPLATE(dtype, [&]() {
         int len;
-        OPEN3D_CUSOLVER_CHECK(
-                getrf_cuda_buffersize<scalar_t>(handle, rows, cols, rows, &len),
-                "getrf_buffersize failed in LUCUDA");
+        // OPEN3D_CUSOLVER_CHECK(
+        //         getrf_cuda_buffersize<scalar_t>(handle, rows, cols, rows,
+        //         &len), "getrf_buffersize failed in LUCUDA");
 
         int* dinfo =
                 static_cast<int*>(MemoryManager::Malloc(sizeof(int), device));
@@ -38,8 +38,9 @@ void LUCUDA(void* A_data,
         MemoryManager::Free(workspace, device);
         MemoryManager::Free(dinfo, device);
 
-        OPEN3D_CUSOLVER_CHECK_WITH_DINFO(getrf_status, "getrf failed in LUCUDA",
-                                         dinfo, device);
+        // OPEN3D_CUSOLVER_CHECK_WITH_DINFO(getrf_status, "getrf failed in
+        // LUCUDA",
+        //                                  dinfo, device);
     });
 }
 

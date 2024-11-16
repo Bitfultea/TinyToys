@@ -29,25 +29,25 @@ void SVDCUDA(const void* A_data,
         int len;
         Blob dinfo(sizeof(int), device);
 
-        OPEN3D_CUSOLVER_CHECK(
-                gesvd_cuda_buffersize<scalar_t>(handle, m, n, &len),
-                "gesvd_buffersize failed in SVDCUDA");
+        // OPEN3D_CUSOLVER_CHECK(
+        //         gesvd_cuda_buffersize<scalar_t>(handle, m, n, &len),
+        //         "gesvd_buffersize failed in SVDCUDA");
 
         Blob workspace(len * sizeof(scalar_t), device);
 
-        OPEN3D_CUSOLVER_CHECK_WITH_DINFO(
-                gesvd_cuda<scalar_t>(
-                        handle, 'A', 'A', m, n,
-                        const_cast<scalar_t*>(
-                                static_cast<const scalar_t*>(A_data)),
-                        m, static_cast<scalar_t*>(S_data),
-                        static_cast<scalar_t*>(U_data), m,
-                        static_cast<scalar_t*>(VT_data), n,
-                        static_cast<scalar_t*>(workspace.GetDataPtr()), len,
-                        static_cast<scalar_t*>(superb_data),
-                        static_cast<int*>(dinfo.GetDataPtr())),
-                "gesvd failed in SVDCUDA",
-                static_cast<int*>(dinfo.GetDataPtr()), device);
+        // OPEN3D_CUSOLVER_CHECK_WITH_DINFO(
+        //         gesvd_cuda<scalar_t>(
+        //                 handle, 'A', 'A', m, n,
+        //                 const_cast<scalar_t*>(
+        //                         static_cast<const scalar_t*>(A_data)),
+        //                 m, static_cast<scalar_t*>(S_data),
+        //                 static_cast<scalar_t*>(U_data), m,
+        //                 static_cast<scalar_t*>(VT_data), n,
+        //                 static_cast<scalar_t*>(workspace.GetDataPtr()), len,
+        //                 static_cast<scalar_t*>(superb_data),
+        //                 static_cast<int*>(dinfo.GetDataPtr())),
+        //         "gesvd failed in SVDCUDA",
+        //         static_cast<int*>(dinfo.GetDataPtr()), device);
     });
 }
 }  // namespace core

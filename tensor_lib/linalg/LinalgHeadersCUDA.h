@@ -11,7 +11,7 @@
 // Open3D.h.
 
 #pragma once
-
+#define BUILD_CUDA_MODULE
 #ifdef BUILD_CUDA_MODULE
 #include <cublas_v2.h>
 #include <cusolverDn.h>
@@ -24,8 +24,8 @@ namespace fmt {
 template <>
 struct formatter<cusolverStatus_t> {
     template <typename FormatContext>
-    auto format(const cusolverStatus_t& c, FormatContext& ctx) const
-            -> decltype(ctx.out()) {
+    auto format(const cusolverStatus_t& c,
+                FormatContext& ctx) const -> decltype(ctx.out()) {
         const char* text = nullptr;
         switch (c) {
             case CUSOLVER_STATUS_SUCCESS:

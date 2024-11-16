@@ -12,7 +12,7 @@
 // Open3D.h.
 
 #pragma once
-
+#define USE_BLAS
 #ifdef USE_BLAS
 #define OPEN3D_CPU_LINALG_INT int32_t
 #define lapack_int int32_t

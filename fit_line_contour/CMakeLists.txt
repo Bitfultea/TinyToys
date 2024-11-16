@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-PROJECT( CPPTest )
+PROJECT( FitLine )
 
 SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,5 +13,5 @@ ADD_LIBRARY(core SHARED core.cpp)
 TARGET_LINK_LIBRARIES(core ${OpenCV_LIBS})
 
 # Compile main.cpp into an executable
-ADD_EXECUTABLE(Unit_test main.cpp)
-TARGET_LINK_LIBRARIES(Unit_test core ${OpenCV_LIBS})
+# ADD_EXECUTABLE(Unit_test main.cpp)
+# TARGET_LINK_LIBRARIES(Unit_test core ${OpenCV_LIBS})

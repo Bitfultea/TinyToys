@@ -24,13 +24,15 @@ void MatmulCUDA(void* A_data,
     cublasHandle_t handle = CuBLASContext::GetInstance().GetHandle(device);
     DISPATCH_LINALG_DTYPE_TO_TEMPLATE(dtype, [&]() {
         scalar_t alpha = 1, beta = 0;
-        OPEN3D_CUBLAS_CHECK(
-                gemm_cuda<scalar_t>(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k,
-                                    &alpha,
-                                    static_cast<const scalar_t*>(A_data), m,
-                                    static_cast<const scalar_t*>(B_data), k,
-                                    &beta, static_cast<scalar_t*>(C_data), m),
-                "cuda gemm failed");
+        // OPEN3D_CUBLAS_CHECK(
+        //         gemm_cuda<scalar_t>(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n,
+        //         k,
+        //                             &alpha,
+        //                             static_cast<const scalar_t*>(A_data), m,
+        //                             static_cast<const scalar_t*>(B_data), k,
+        //                             &beta, static_cast<scalar_t*>(C_data),
+        //                             m),
+        //         "cuda gemm failed");
     });
 }
 

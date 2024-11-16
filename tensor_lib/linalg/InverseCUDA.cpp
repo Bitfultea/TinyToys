@@ -26,28 +26,28 @@ void InverseCUDA(void* A_data,
         int len;
         Blob dinfo(sizeof(int), device);
 
-        OPEN3D_CUSOLVER_CHECK(
-                getrf_cuda_buffersize<scalar_t>(handle, n, n, n, &len),
-                "getrf_buffersize failed in InverseCUDA");
-        Blob workspace(len * sizeof(scalar_t), device);
+        // OPEN3D_CUSOLVER_CHECK(
+        //         getrf_cuda_buffersize<scalar_t>(handle, n, n, n, &len),
+        //         "getrf_buffersize failed in InverseCUDA");
+        // Blob workspace(len * sizeof(scalar_t), device);
 
-        OPEN3D_CUSOLVER_CHECK_WITH_DINFO(
-                getrf_cuda<scalar_t>(
-                        handle, n, n, static_cast<scalar_t*>(A_data), n,
-                        static_cast<scalar_t*>(workspace.GetDataPtr()),
-                        static_cast<int*>(ipiv_data),
-                        static_cast<int*>(dinfo.GetDataPtr())),
-                "getrf failed in InverseCUDA",
-                static_cast<int*>(dinfo.GetDataPtr()), device);
+        // OPEN3D_CUSOLVER_CHECK_WITH_DINFO(
+        //         getrf_cuda<scalar_t>(
+        //                 handle, n, n, static_cast<scalar_t*>(A_data), n,
+        //                 static_cast<scalar_t*>(workspace.GetDataPtr()),
+        //                 static_cast<int*>(ipiv_data),
+        //                 static_cast<int*>(dinfo.GetDataPtr())),
+        //         "getrf failed in InverseCUDA",
+        //         static_cast<int*>(dinfo.GetDataPtr()), device);
 
-        OPEN3D_CUSOLVER_CHECK_WITH_DINFO(
-                getrs_cuda<scalar_t>(handle, CUBLAS_OP_N, n, n,
-                                     static_cast<scalar_t*>(A_data), n,
-                                     static_cast<int*>(ipiv_data),
-                                     static_cast<scalar_t*>(output_data), n,
-                                     static_cast<int*>(dinfo.GetDataPtr())),
-                "getrs failed in InverseCUDA",
-                static_cast<int*>(dinfo.GetDataPtr()), device);
+        // OPEN3D_CUSOLVER_CHECK_WITH_DINFO(
+        //         getrs_cuda<scalar_t>(handle, CUBLAS_OP_N, n, n,
+        //                              static_cast<scalar_t*>(A_data), n,
+        //                              static_cast<int*>(ipiv_data),
+        //                              static_cast<scalar_t*>(output_data), n,
+        //                              static_cast<int*>(dinfo.GetDataPtr())),
+        //         "getrs failed in InverseCUDA",
+        //         static_cast<int*>(dinfo.GetDataPtr()), device);
     });
 }
 

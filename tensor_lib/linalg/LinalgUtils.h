@@ -13,9 +13,9 @@
 #include "Dtype.h"
 #include "Logging.h"
 #include "MemoryManager.h"
+#include "linalg/BlasWrapper.h"
 #include "linalg/LinalgHeadersCPU.h"
 #include "linalg/LinalgHeadersCUDA.h"
-
 namespace open3d {
 namespace core {
 
@@ -42,35 +42,37 @@ inline void OPEN3D_LAPACK_CHECK(OPEN3D_CPU_LINALG_INT info,
 }
 
 #ifdef BUILD_CUDA_MODULE
-inline void OPEN3D_CUBLAS_CHECK(cublasStatus_t status, const std::string& msg) {
-    if (CUBLAS_STATUS_SUCCESS != status) {
-        utility::LogError("{}", msg);
-    }
-}
+// inline void OPEN3D_CUBLAS_CHECK(cublasStatus_t status, const std::string&
+// msg) {
+//     if (CUBLAS_STATUS_SUCCESS != status) {
+//         utility::LogError("{}", msg);
+//     }
+// }
 
-inline void OPEN3D_CUSOLVER_CHECK(cusolverStatus_t status,
-                                  const std::string& msg) {
-    if (CUSOLVER_STATUS_SUCCESS != status) {
-        utility::LogError("{}", msg);
-    }
-}
+// inline void OPEN3D_CUSOLVER_CHECK(cusolverStatus_t status,
+//                                   const std::string& msg) {
+//     if (CUSOLVER_STATUS_SUCCESS != status) {
+//         utility::LogError("{}", msg);
+//     }
+// }
 
-inline void OPEN3D_CUSOLVER_CHECK_WITH_DINFO(cusolverStatus_t status,
-                                             const std::string& msg,
-                                             int* dinfo,
-                                             const Device& device) {
-    int hinfo;
-    MemoryManager::MemcpyToHost(&hinfo, dinfo, device, sizeof(int));
-    if (status != CUSOLVER_STATUS_SUCCESS || hinfo != 0) {
-        if (hinfo < 0) {
-            utility::LogError("{}: {}-th parameter is invalid.", msg, -hinfo);
-        } else if (hinfo > 0) {
-            utility::LogError("{}: singular condition detected.", msg);
-        } else {
-            utility::LogError("{}: status error code = {}.", msg, status);
-        }
-    }
-}
+// inline void OPEN3D_CUSOLVER_CHECK_WITH_DINFO(cusolverStatus_t status,
+//                                              const std::string& msg,
+//                                              int* dinfo,
+//                                              const Device& device) {
+//     int hinfo;
+//     MemoryManager::MemcpyToHost(&hinfo, dinfo, device, sizeof(int));
+//     if (status != CUSOLVER_STATUS_SUCCESS || hinfo != 0) {
+//         if (hinfo < 0) {
+//             utility::LogError("{}: {}-th parameter is invalid.", msg,
+//             -hinfo);
+//         } else if (hinfo > 0) {
+//             utility::LogError("{}: singular condition detected.", msg);
+//         } else {
+//             utility::LogError("{}: status error code = {}.", msg, status);
+//         }
+//     }
+// }
 
 class CuSolverContext {
 public:

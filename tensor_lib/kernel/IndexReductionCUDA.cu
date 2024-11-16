@@ -11,7 +11,7 @@
 #include "Indexer.h"
 #include "ParallelFor.h"
 #include "Tensor.h"
-#include "open3d/t/geometry/kernel/GeometryMacros.h"
+#include "kernel/GeometryMacros.h"
 
 namespace open3d {
 namespace core {

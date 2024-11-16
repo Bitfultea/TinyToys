@@ -19,7 +19,8 @@
 #include "Tensor.h"
 #include "TensorKey.h"
 
-namespace open3d { namespace core {
+namespace open3d {
+namespace core {
 
 /// A tensorlist is a list of Tensors of the same shape, similar to
 /// std::vector<Tensor>. Internally, a tensorlist stores the Tensors in one
@@ -38,8 +39,7 @@ namespace open3d { namespace core {
 class TensorList {
 public:
     /// Useful to support operator[] in a map.
-    TensorList() : TensorList(SizeVector({}), core::Float32) {
-    }
+    TensorList() : TensorList(SizeVector({}), core::Float32) {}
 
     /// Constructs an empty tensorlist.
     ///
@@ -47,21 +47,23 @@ public:
     /// and scalar element_shape are allowed.
     /// \param dtype Data type of the contained tensors. e.g. core::Float32.
     /// \param device Device of the contained tensors. e.g. Device("CPU:0").
-    TensorList(const SizeVector &element_shape, Dtype dtype,
-               const Device &device = Device("CPU:0")) :
-        element_shape_(element_shape), size_(0), reserved_size_(ComputeReserveSize(0)),
-        internal_tensor_(shape_util::Concat({reserved_size_}, element_shape_), dtype,
-                         device) {
-    }
+    TensorList(const SizeVector &element_shape,
+               Dtype dtype,
+               const Device &device = Device("CPU:0"))
+        : element_shape_(element_shape),
+          size_(0),
+          reserved_size_(ComputeReserveSize(0)),
+          internal_tensor_(shape_util::Concat({reserved_size_}, element_shape_),
+                           dtype,
+                           device) {}
 
     /// Constructs a tensorlist from a vector of Tensors. The tensors must have
     /// the same shape, dtype and device. Values will be copied.
     ///
     /// \param tensors A vector of tensors. The tensors must have common shape,
     /// dtype and device.
-    TensorList(const std::vector<Tensor> &tensors) :
-        TensorList(tensors.begin(), tensors.end()) {
-    }
+    TensorList(const std::vector<Tensor> &tensors)
+        : TensorList(tensors.begin(), tensors.end()) {}
 
     /// Constructs a tensorlist with specified size.
     ///
@@ -70,22 +72,24 @@ public:
     /// and scalar element_shape are allowed.
     /// \param dtype Data type of the contained tensors. e.g. core::Float32.
     /// \param device Device of the contained tensors. e.g. Device("CPU:0").
-    TensorList(int64_t size, const SizeVector &element_shape, Dtype dtype,
-               const Device &device = Device("CPU:0")) :
-        element_shape_(element_shape), size_(size),
-        reserved_size_(ComputeReserveSize(size)),
-        internal_tensor_(shape_util::Concat({reserved_size_}, element_shape_), dtype,
-                         device) {
-    }
+    TensorList(int64_t size,
+               const SizeVector &element_shape,
+               Dtype dtype,
+               const Device &device = Device("CPU:0"))
+        : element_shape_(element_shape),
+          size_(size),
+          reserved_size_(ComputeReserveSize(size)),
+          internal_tensor_(shape_util::Concat({reserved_size_}, element_shape_),
+                           dtype,
+                           device) {}
 
     /// Constructs a tensorlist from a list of Tensors. The tensors must have
     /// the same shape, dtype and device. Values will be copied.
     ///
     /// \param tensors A list of tensors. The tensors must have common shape,
     /// dtype and device.
-    TensorList(const std::initializer_list<Tensor> &tensors) :
-        TensorList(tensors.begin(), tensors.end()) {
-    }
+    TensorList(const std::initializer_list<Tensor> &tensors)
+        : TensorList(tensors.begin(), tensors.end()) {}
 
     /// Constructs a tensorlist from Tensor iterator. The tensors must have
     /// the same shape, dtype and device. Values will be copied.
@@ -96,7 +100,8 @@ public:
     TensorList(InputIterator begin, InputIterator end) {
         int64_t size = std::distance(begin, end);
         if (size == 0) {
-            utility::LogError("Empty input tensors cannot initialize a tensorlist.");
+            utility::LogError(
+                    "Empty input tensors cannot initialize a tensorlist.");
         }
 
         // Set size_ and reserved_size_.
@@ -107,8 +112,9 @@ public:
         element_shape_ = begin->GetShape();
         std::for_each(begin, end, [&](const Tensor &tensor) -> void {
             if (tensor.GetShape() != element_shape_) {
-                utility::LogError("Tensors must have the same shape {}, but got {}.",
-                                  element_shape_, tensor.GetShape());
+                utility::LogError(
+                        "Tensors must have the same shape {}, but got {}.",
+                        element_shape_, tensor.GetShape());
             }
         });
 
@@ -116,8 +122,9 @@ public:
         Dtype dtype = begin->GetDtype();
         std::for_each(begin, end, [&](const Tensor &tensor) -> void {
             if (tensor.GetDtype() != dtype) {
-                utility::LogError("Tensors must have the same dtype {}, but got {}.",
-                                  dtype.ToString(), tensor.GetDtype().ToString());
+                utility::LogError(
+                        "Tensors must have the same dtype {}, but got {}.",
+                        dtype.ToString(), tensor.GetDtype().ToString());
             }
         });
 
@@ -125,16 +132,20 @@ public:
         Device device = begin->GetDevice();
         std::for_each(begin, end, [&](const Tensor &tensor) -> void {
             if (tensor.GetDevice() != device) {
-                utility::LogError("Tensors must have the same device {}, but got {}.",
-                                  device.ToString(), tensor.GetDevice().ToString());
+                utility::LogError(
+                        "Tensors must have the same device {}, but got {}.",
+                        device.ToString(), tensor.GetDevice().ToString());
             }
         });
 
         // Construct internal tensor.
         internal_tensor_ =
-            Tensor(shape_util::Concat({reserved_size_}, element_shape_), dtype, device);
+                Tensor(shape_util::Concat({reserved_size_}, element_shape_),
+                       dtype, device);
         size_t i = 0;
-        for (auto iter = begin; iter != end; ++iter, ++i) { internal_tensor_[i] = *iter; }
+        for (auto iter = begin; iter != end; ++iter, ++i) {
+            internal_tensor_[i] = *iter;
+        }
     }
 
     /// Factory function to create tensorlist from a Tensor.
@@ -227,56 +238,49 @@ public:
 
     std::string ToString() const;
 
-    SizeVector GetElementShape() const {
-        return element_shape_;
-    }
+    SizeVector GetElementShape() const { return element_shape_; }
 
     void AssertElementShape(const SizeVector &expected_element_shape) const {
         if (expected_element_shape != element_shape_) {
-            utility::LogError("TensorList has element shape {}, but is expected to have "
-                              "element shape {}.",
-                              element_shape_, expected_element_shape);
+            utility::LogError(
+                    "TensorList has element shape {}, but is expected to have "
+                    "element shape {}.",
+                    element_shape_, expected_element_shape);
         }
     }
 
     void AssertDevice(const Device &expected_device) const {
         if (GetDevice() != expected_device) {
-            utility::LogError("TensorList has device {}, but is expected to be {}.",
-                              GetDevice().ToString(), expected_device.ToString());
+            utility::LogError(
+                    "TensorList has device {}, but is expected to be {}.",
+                    GetDevice().ToString(), expected_device.ToString());
         }
     }
 
-    Device GetDevice() const {
-        return internal_tensor_.GetDevice();
-    }
+    Device GetDevice() const { return internal_tensor_.GetDevice(); }
 
-    Dtype GetDtype() const {
-        return internal_tensor_.GetDtype();
-    }
+    Dtype GetDtype() const { return internal_tensor_.GetDtype(); }
 
-    int64_t GetSize() const {
-        return size_;
-    }
+    int64_t GetSize() const { return size_; }
 
-    int64_t GetReservedSize() const {
-        return reserved_size_;
-    }
+    int64_t GetReservedSize() const { return reserved_size_; }
 
-    const Tensor &GetInternalTensor() const {
-        return internal_tensor_;
-    }
+    const Tensor &GetInternalTensor() const { return internal_tensor_; }
 
-    bool IsResizable() const {
-        return is_resizable_;
-    }
+    bool IsResizable() const { return is_resizable_; }
 
 protected:
     /// Fully specified constructor.
-    TensorList(const SizeVector element_shape, int64_t size, int64_t reserved_size,
-               const Tensor &internal_tensor, bool is_resizable) :
-        element_shape_(element_shape), size_(size), reserved_size_(reserved_size),
-        internal_tensor_(internal_tensor), is_resizable_(is_resizable) {
-    }
+    TensorList(const SizeVector element_shape,
+               int64_t size,
+               int64_t reserved_size,
+               const Tensor &internal_tensor,
+               bool is_resizable)
+        : element_shape_(element_shape),
+          size_(size),
+          reserved_size_(reserved_size),
+          internal_tensor_(internal_tensor),
+          is_resizable_(is_resizable) {}
 
     /// Expand internal tensor to be larger or equal to the requested size. If
     /// the current reserved size is smaller than the requested size, the
@@ -320,4 +324,5 @@ protected:
     /// resizable.
     bool is_resizable_ = true;
 };
-}} // namespace open3d::core
+}  // namespace core
+}  // namespace open3d

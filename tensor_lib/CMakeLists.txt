@@ -9,17 +9,24 @@ set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda -lcusolver -lcublas"
 # Enable CUDA as a language
 enable_language(CUDA)
 
+find_package(Eigen3 REQUIRED)
+
+if(Eigen3_FOUND)
+    message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIR}")
+else()
+    message(FATAL_ERROR "Eigen3 not found!")
+endif()
+
 find_package(fmt REQUIRED)
-# find_package(MKL REQUIRED)
-# find_package(OpenBLAS REQUIRED) Fail to find OpenBLAS????
-find_package(OpenBLAS)
+find_package(OpenBLAS) #Fail to find OpenBLAS????
 if(OpenBLAS_FOUND)
     message(STATUS "Found OpenBLAS: ${OpenBLAS_LIBRARIES}")
     message(STATUS "OpenBLAS include dirs: ${OpenBLAS_INCLUDE_DIRS}")
 else()
-    message(FATAL_WARNING "OpenBLAS not found!")
+    message(STATUS "OpenBLAS not found!")
     set(OpenBLAS_LIBRARIES /usr/lib/x86_64-linux-gnu/libopenblas.so)
 endif()
+
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CUDA_INCLUDE_DIRS})
@@ -34,6 +41,7 @@ set(CUSOLVER_LIB ${CUDA_LIB_DIR}/libcusolver.so)
 # ADD_LIBRARY(Tensor_lib SHARED ${SOURCES})
 add_library(Tensor_lib SHARED ${SOURCES})
 
+target_include_directories(Tensor_lib PUBLIC /usr/include/eigen3)
 target_link_libraries(Tensor_lib
   ${OpenCV_LIBS}
   ${CUDA_LIBRARIES}

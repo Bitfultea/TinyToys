@@ -10,3 +10,4 @@ add_subdirectory(test)
 #lib
 add_subdirectory(fit_line_contour)
 add_subdirectory(tensor_lib)
+add_subdirectory(merge_img_cuda)

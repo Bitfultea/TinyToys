@@ -1,6 +1,10 @@
 # TinyToys
 Collection of various algorithm implementations from daily usage
 
+## Required Lib
+- sudo apt-get install liblapacke-dev
+- sudo apt-get install libopenblas-dev
+
 ## Contain:
 - Helcon fit_line_contour implementation of OpenCV
 - Tensor lib for C++ from Open3D
